@@ -15,20 +15,20 @@ def ensure_dir(directory):
 
 def transcribe_audio(audio_path):
     """Transcribes audio using Deepgram's API and saves the audio file with a unique timestamp."""
-    audio_storage_dir = "permanent_audio_files"
-    ensure_dir(audio_storage_dir)
-    
-    # Generate a unique filename with a timestamp
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    filename = f"audio_{timestamp}.wav"
-    permanent_audio_path = os.path.join(audio_storage_dir, filename)
-    
-    shutil.copy(audio_path, permanent_audio_path)
-    print(f"Saved audio file to: {permanent_audio_path}")  # Debug: Confirm file save
-
-    options = PrerecordedOptions(model="nova-2", smart_format=True, language="en-AU")
-
     try:
+        audio_storage_dir = "permanent_audio_files"
+        ensure_dir(audio_storage_dir)
+        
+        # Generate a unique filename with a timestamp
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = f"audio_{timestamp}.wav"
+        permanent_audio_path = os.path.join(audio_storage_dir, filename)
+        
+        shutil.copy(audio_path, permanent_audio_path)
+        print(f"Saved audio file to: {permanent_audio_path}")  # Debug: Confirm file save
+
+        options = PrerecordedOptions(model="nova-2", smart_format=True, language="en-AU")
+    
         # Open the permanently stored audio file for transcription
         with open(permanent_audio_path, 'rb') as audio:
             source = {'buffer': audio}
@@ -37,5 +37,6 @@ def transcribe_audio(audio_path):
             return transcript
     except Exception as e:
         print("Error during transcription:", e)
+        raise e
         return str(e)
 
